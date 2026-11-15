@@ -1,0 +1,9 @@
+# Local Python and editor files.
+.venv/
+.idea/
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Yahoo Finance's local timezone and cookie cache.
+.cache/

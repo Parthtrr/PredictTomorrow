@@ -1,0 +1,18 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "ticker": {"type": "keyword"},
+      "date": {"type": "date", "format": "strict_date"},
+      "open": {"type": "double", "coerce": false},
+      "high": {"type": "double", "coerce": false},
+      "low": {"type": "double", "coerce": false},
+      "close": {"type": "double", "coerce": false},
+      "volume": {"type": "long", "coerce": false}
+    }
+  }
+}

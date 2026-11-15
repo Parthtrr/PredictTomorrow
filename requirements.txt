@@ -1,0 +1,5 @@
+# Match the locally installed Elasticsearch 8.18 server.
+elasticsearch>=8.18.0,<8.19.0
+
+# Download daily prices from Yahoo Finance.
+yfinance==1.8.0
