@@ -12,7 +12,11 @@
       "high": {"type": "double", "coerce": false},
       "low": {"type": "double", "coerce": false},
       "close": {"type": "double", "coerce": false},
-      "volume": {"type": "long", "coerce": false}
+      "volume": {"type": "long", "coerce": false},
+      "day_change_pct": {"type": "double", "coerce": false},
+      "candle_pattern_1": {"type": "byte", "coerce": false},
+      "candle_pattern_2": {"type": "byte", "coerce": false},
+      "candle_pattern_3": {"type": "byte", "coerce": false}
     }
   }
 }

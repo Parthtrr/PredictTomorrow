@@ -4,27 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ef55907-559f-4d4d-b9cc-8452dc2812a6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/PredictTomorrow.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dao/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dao/daily_price_dao.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dao/elasticsearch_client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dao/yfinance_dao.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mappings/nifty_daily_data.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/price_download_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_daily_price_dao.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_price_download_service.py" afterDir="false" />
+    <list default="true" id="0ef55907-559f-4d4d-b9cc-8452dc2812a6" name="Changes" comment="Initial Dao commit">
+      <change afterPath="$PROJECT_DIR$/build_candle_patterns.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/stock_dataset.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evaluate_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_train/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_train/kronos_evaluator.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_train/kronos_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_train/metrics.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/candle_patterns.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/price_features.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_candle_patterns.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_model_evaluation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_price_features.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_stock_dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dao/daily_price_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/dao/daily_price_dao.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mappings/nifty_daily_data.json" beforeDir="false" afterPath="$PROJECT_DIR$/mappings/nifty_daily_data.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/price_download_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/price_download_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_daily_price_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_daily_price_dao.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_price_download_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_price_download_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +37,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Parthtrr"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Parthtrr/PredictTomorrow",
+    "accountId": "c41c272b-8586-4175-bd5e-896dd2f274ea"
+  }
+}]]></component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 7
 }]]></component>
@@ -45,13 +60,36 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.evaluate_model.executor": "Run",
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.evaluate_model">
+    <configuration name="evaluate_model" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PredictTomorrow" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/evaluate_model.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="PredictTomorrow" />
       <option name="ENV_FILES" value="" />
@@ -76,6 +114,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.evaluate_model" />
         <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
@@ -95,6 +134,35 @@
       <option name="presentableId" value="Default" />
       <updated>1794742830194</updated>
     </task>
+    <task id="LOCAL-00001" summary="Initial Dao commit">
+      <option name="closed" value="true" />
+      <created>1794746012905</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1794746012906</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial Dao commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial Dao commit" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model_train/kronos_evaluator.py</url>
+          <line>20</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/evaluate_model.py</url>
+          <line>35</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

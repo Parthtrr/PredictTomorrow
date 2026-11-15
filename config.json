@@ -12,5 +12,27 @@
     "end_date": "today",
     "timezone": "Asia/Kolkata",
     "market_close_time": "15:30"
+  },
+  "datasets": {
+    "train_ratio": 0.70,
+    "validation_ratio": 0.15,
+    "test_ratio": 0.15,
+    "drop_missing_rows": true
+  },
+  "model_train": {
+    "model_start_date": "2010-01-01",
+    "model_end_date": "2012-12-31",
+    "model_id": "NeoQuasar/Kronos-small",
+    "model_revision": "901c26c1332695a2a8f243eb2f37243a37bea320",
+    "tokenizer_id": "NeoQuasar/Kronos-Tokenizer-base",
+    "tokenizer_revision": "0e0117387f39004a9016484a186a908917e22426",
+    "kronos_repo": "vendor/Kronos",
+    "kronos_revision": "67b630e67f6a18c9e9be918d9b4337c960db1e9a",
+    "lookback": 90,
+    "sample_count": 1,
+    "seed": 42,
+    "device": "cpu",
+    "cpu_threads": 4,
+    "output_dir": "outputs"
   }
 }

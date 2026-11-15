@@ -77,6 +77,24 @@ class PriceDownloadServiceTest(unittest.TestCase):
                 self.assertIsInstance(record["volume"], int)
                 self.assertEqual(result["saved_count"], 1)
 
+    def test_daily_change_is_calculated_before_saving(self):
+        """The importer should save 5 percent when the close rises from 100 to 105."""
+        history = pd.concat([make_history(), make_history()])
+        history.index = pd.to_datetime(["2026-01-01", "2026-01-02"])
+        history.loc["2026-01-01", "Close"] = 100.0
+        downloader = Mock()
+        downloader.get_daily_prices.return_value = history
+        store = Mock()
+        service = PriceDownloadService(downloader, store)
+        now = datetime(2026, 1, 2, 16, tzinfo=ZoneInfo("Asia/Kolkata"))
+        service.download_history(make_settings(), now=now)
+        records = store.save_prices.call_args.args[0]
+        self.assertIsNone(records[0]["day_change_pct"])
+        self.assertAlmostEqual(records[1]["day_change_pct"], 5.0)
+        self.assertEqual(records[0]["candle_pattern_1"], 0)
+        self.assertEqual(records[1]["candle_pattern_2"], 0)
+        self.assertIsNone(records[1]["candle_pattern_3"])
+
     def test_missing_prices_become_null_and_are_counted(self):
         """Preserve Yahoo's empty price fields and report incomplete records."""
         history = make_history()
@@ -92,6 +110,8 @@ class PriceDownloadServiceTest(unittest.TestCase):
         record = store.save_prices.call_args.args[0][0]
         for field in ("open", "high", "low", "close"):
             self.assertIsNone(record[field])
+        for length in (1, 2, 3):
+            self.assertIsNone(record["candle_pattern_" + str(length)])
         self.assertEqual(result["incomplete_count"], 1)
 
     def test_invalid_volume_is_not_rounded_or_saved(self):

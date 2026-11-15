@@ -27,13 +27,18 @@ class DailyPriceDao:
         self.batch_size = batch_size
 
     def create_index(self):
-        """Create the OHLCV index once; leave an existing index unchanged."""
-        if self.client.indices.exists(index=self.index_name):
-            return False
-
+        """Create the index or apply field mappings without deleting records."""
         mapping_path = Path(__file__).resolve().parents[1] / "mappings/nifty_daily_data.json"
         with mapping_path.open(encoding="utf-8") as mapping_file:
             definition = json.load(mapping_file)
+
+        if self.client.indices.exists(index=self.index_name):
+            # Add new fields to an existing index without recreating it.
+            self.client.indices.put_mapping(
+                index=self.index_name,
+                properties=definition["mappings"]["properties"],
+            )
+            return False
 
         self.client.indices.create(
             index=self.index_name,
@@ -97,6 +102,27 @@ class DailyPriceDao:
         if isinstance(volume, bool) or not isinstance(volume, int) or volume < 0:
             raise ValueError("volume must be a non-negative integer.")
         document["volume"] = volume
+
+        # A percentage can be positive, negative, zero, or missing.
+        day_change_pct = price.get("day_change_pct")
+        if day_change_pct is not None:
+            if isinstance(day_change_pct, bool) or not isinstance(day_change_pct, (int, float)):
+                raise ValueError("day_change_pct must be a number or null.")
+            if not math.isfinite(day_change_pct):
+                raise ValueError("day_change_pct must be finite.")
+            day_change_pct = float(day_change_pct)
+        document["day_change_pct"] = day_change_pct
+
+        # Pattern length determines the allowed bullish/bearish score magnitude.
+        for length in (1, 2, 3):
+            field = "candle_pattern_" + str(length)
+            score = price.get(field)
+            if score is not None:
+                if isinstance(score, bool) or not isinstance(score, int):
+                    raise ValueError(field + " must be an integer or null.")
+                if score not in (-length, 0, length):
+                    raise ValueError(field + " must be negative length, zero, or positive length.")
+            document[field] = score
 
         # Compare candle prices only when all four values were supplied.
         if not has_missing_price:

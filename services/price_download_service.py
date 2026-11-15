@@ -6,6 +6,9 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
+from services.price_features import add_day_change_pct
+from services.candle_patterns import add_candle_patterns
+
 
 class PriceDownloadService:
     """Connect the Yahoo Finance reader to the daily-price store."""
@@ -71,6 +74,11 @@ class PriceDownloadService:
 
         if not prices:
             raise RuntimeError("No daily prices were returned inside the configured window.")
+
+        # Calculate daily change after the rows are in chronological order.
+        add_day_change_pct(prices)
+        # Store candle-pattern features now; the pretrained model still uses OHLCV.
+        add_candle_patterns(prices)
 
         # Stable document IDs make a full-history rerun safe from duplicates.
         saved_count = self.price_dao.save_prices(prices, refresh=True)

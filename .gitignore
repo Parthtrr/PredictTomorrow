@@ -7,3 +7,7 @@ __pycache__/
 
 # Yahoo Finance's local timezone and cookie cache.
 .cache/
+
+# Official external model code and generated evaluation reports.
+vendor/
+outputs/

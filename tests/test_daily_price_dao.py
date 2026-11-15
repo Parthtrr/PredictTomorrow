@@ -21,6 +21,10 @@ def make_price(day="2026-01-02", ticker="TEST.NS"):
         "low": 90,
         "close": 105,
         "volume": 1000,
+        "day_change_pct": None,
+        "candle_pattern_1": None,
+        "candle_pattern_2": None,
+        "candle_pattern_3": None,
     }
 
 
@@ -53,6 +57,39 @@ class DailyPriceDaoTest(unittest.TestCase):
         self.dao.save_prices([make_price()], refresh=True)
         self.assertFalse(self.dao.create_index())
         self.assertEqual(self.client.count(index=self.index_name)["count"], 1)
+
+    def test_existing_index_gets_the_new_field_without_losing_records(self):
+        """An older OHLCV-only index must accept the new percentage field."""
+        legacy_index = self.index_name + "_legacy"
+        properties = self.client.indices.get_mapping(index=self.index_name)[self.index_name]["mappings"]["properties"]
+        added_fields = ["day_change_pct", "candle_pattern_1", "candle_pattern_2", "candle_pattern_3"]
+        for field in added_fields:
+            properties.pop(field)
+        self.client.indices.create(
+            index=legacy_index,
+            settings={"number_of_shards": 1, "number_of_replicas": 0},
+            mappings={"dynamic": "strict", "properties": properties},
+        )
+        self.addCleanup(self.client.indices.delete, index=legacy_index)
+        price = make_price()
+        for field in added_fields:
+            price.pop(field)
+        self.client.index(index=legacy_index, id="TEST.NS|2026-01-02", document=price, refresh="wait_for")
+
+        legacy_dao = DailyPriceDao(self.client, legacy_index)
+        self.assertFalse(legacy_dao.create_index())
+        self.assertEqual(legacy_dao.get_prices("TEST.NS", "2026-01-02", "2026-01-02"), [price])
+        price["day_change_pct"] = -2.5
+        price["candle_pattern_1"] = 1
+        price["candle_pattern_2"] = -2
+        price["candle_pattern_3"] = 3
+        legacy_dao.save_prices([price], refresh=True)
+        records = legacy_dao.get_prices("TEST.NS", "2026-01-02", "2026-01-02")
+        self.assertEqual(records[0]["day_change_pct"], -2.5)
+        self.assertEqual(records[0]["candle_pattern_1"], 1)
+        self.assertEqual(records[0]["candle_pattern_2"], -2)
+        self.assertEqual(records[0]["candle_pattern_3"], 3)
+        self.assertEqual(self.client.count(index=legacy_index)["count"], 1)
 
     def test_repeated_save_updates_the_same_ticker_and_date(self):
         """Ticker case and whitespace must not cause duplicate documents."""
@@ -93,6 +130,14 @@ class DailyPriceDaoTest(unittest.TestCase):
             ("volume", True),
             ("date", "2026-02-30"),
             ("ticker", " "),
+            ("day_change_pct", float("nan")),
+            ("day_change_pct", True),
+            ("day_change_pct", "5%"),
+            ("candle_pattern_1", 2),
+            ("candle_pattern_2", -1),
+            ("candle_pattern_3", 2),
+            ("candle_pattern_1", True),
+            ("candle_pattern_2", 2.0),
         ]
         for field, value in invalid_values:
             with self.subTest(field=field, value=value):

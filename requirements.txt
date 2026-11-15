@@ -3,3 +3,14 @@ elasticsearch>=8.18.0,<8.19.0
 
 # Download daily prices from Yahoo Finance.
 yfinance==1.8.0
+
+# Build the train, validation, and test DataFrames.
+pandas>=2.2,<4
+
+# Run the official pretrained Kronos implementation without fine-tuning.
+torch==2.15.0
+numpy>=1.26,<3
+einops==0.8.1
+huggingface_hub==0.33.1
+safetensors==0.6.2
+tqdm==4.67.1
